@@ -13,3 +13,9 @@ This includes the link to the Python LOOT API, that can sometimes break.
 
 ## Use
 Simply run the script in any directory and follow the directions.
+
+
+## Todo
+- [ ] Enable use of the nightly/WIP builds over dev builds
+	- This includes being able to switch branches
+- [ ] Clean up code to better handle exceptions (like dead LOOT API link)
