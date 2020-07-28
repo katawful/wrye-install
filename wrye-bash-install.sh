@@ -2,6 +2,7 @@
 
 ## This script installs the python version of Wrye Bash to the Wine prefix of your choice
 # it then gives you a choice of how you wanna run Wrye Bash, CLI or .desktop file
+# TODO add repo choosing somewhere
 
 clear
 cat << "EOF"
