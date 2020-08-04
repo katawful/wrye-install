@@ -23,6 +23,7 @@ echo ""
 echo -e "This will install current Wrye Bash dev files to a Wine prefix\n"
 
 echo "Note: Use '$HOME' instead of '~/' if its in your home directory"
+echo "Note: Please enter a valid folder/prefix name, errors will occur otherwise"
 read -p "Enter the Wine prefix in question : " wineprefix
 export WINEPREFIX="$wineprefix"
 export WINEDEBUG=-all
@@ -75,13 +76,36 @@ EOF
 wrye="$wineprefix/drive_c/wrye-bash"
 get_wrye()
 {
+
+	cd "$wrye"
 	if [ -d "$wrye" ]; then
-		read -n 1 '-d ' -sp "Wrye Bash already downloaded, updated? (y/n)" wryemenu
+		read -n 1 '-d ' -sp "Wrye Bash already downloaded, update? (y/n)" wryemenu
 		echo ""
 		if [[ "$wryemenu" == y ]]; then
-			git config pull.rebase false
-			git pull origin
-			echo "Wrye Bash updated"
+			curr_branch=$(git branch --show-current)
+			read -n 1 '-d ' -sp "Would you like to switch branches? (y/n) " branch_switch
+			echo ""
+			if [[ "$branch_switch" == y ]]; then
+				git fetch --all
+				git reset --hard origin/"$curr_branch"
+				if [[ "$curr_branch" == "dev" ]]; then
+					git fetch --all
+					git reset --hard origin/nightly
+					git checkout nightly
+				elif [[ "$curr_branch" == "nightly" ]]; then
+					git fetch --all
+					git reset --hard origin/dev
+					git checkout dev
+				fi
+				echo "Branch changed to $curr_branch"
+			else
+				git fetch --all
+				git reset --hard origin/"$curr_branch"
+				git pull origin "$curr_branch"
+				echo ""
+				echo "Wrye Bash updated"
+			fi
+			flag_download=2
 		elif [[ "$wryemenu" == n ]]; then
 			echo "Wrye Bash not updated"
 		else
@@ -89,6 +113,10 @@ get_wrye()
 		fi
 		echo ""
 	else
+		echo "Which version of Wrye Bash would you like to install?"
+		echo "Note, WIP builds are taken from the "nightly" branch, dev builds are taken from the "dev" branch"
+		read -n 1 '-d ' -sp "WIP / Dev (w/d)" branch_choice
+		echo ""
 		cd "$wineprefix/drive_c"
 		cat << "EOF"
  _    _                  ______           _     
@@ -103,7 +131,14 @@ _\/__\/|_|   \__, |\___| \____/ \__,_|___/_|_|_|
 | |/ / (_) \ V  V /| | | | | (_) | (_| | (_| |  
 |___/ \___/ \_/\_/ |_| |_|_|\___/ \__,_|\__,_|
 EOF
-		git clone "https://github.com/wrye-bash/wrye-bash.git"
+		if [[ "$branch_choice" == w ]]; then
+			branch="nightly"
+			echo "WIP chosen"
+		else
+			branch="dev"
+			echo "Dev chosen"
+		fi
+		git clone -b "$branch" "https://github.com/wrye-bash/wrye-bash.git"
 		flag_download=2
 	fi
 	cd "$wrye"
@@ -117,6 +152,7 @@ install_wrye()
 	if [[ $flag_download == 2 ]]; then
 		wine C:/Python27/python.exe -m pip install -r requirements.txt
 	else
+		echo "Python requirements need to be updated occasionally"
 		read -n 1 '-d ' -sp "Would you like to install Python requirements? (y/n)" wryereq
 		echo ""
 		if [[ "$wryereq" == y ]]; then
@@ -127,11 +163,14 @@ install_wrye()
 			echo "No option picked, defaulting to no requirements installation"
 		fi
 		echo ""
-		if [ -f "$HOME/.local/share/applications/wrye-bash-install.desktop" ]; then
-			echo ".desktop file already exists"
-		else
-			read -p "Installing a .desktop file for Wrye-Bash, pick a name: " wryename
-			cat > "$HOME/.local/share/applications/wrye-bash-installer.desktop" << EOF
+	fi
+	echo ""
+
+	if [ -f "$HOME/.local/share/applications/wrye-bash-install.desktop" ]; then
+		echo ".desktop file already exists"
+	else
+		read -p "Installing a .desktop file for Wrye-Bash, pick a name: " wryename
+		cat > "$HOME/.local/share/applications/wrye-bash-installer.desktop" << EOF
 [Desktop Entry]
 Comment=
 Exec=WINEPREFIX="$wineprefix" WINEDEBUG=-all wine C:/Python27/python.exe C:/wrye-bash/Mopy/Wrye\ Bash\ Launcher.pyw
@@ -147,7 +186,6 @@ Type=Application
 X-KDE-SubstituteUID=false
 X-KDE-Username=
 EOF
-		fi
 	fi
 
 	echo "Wrye Bash has been installed/updated"
