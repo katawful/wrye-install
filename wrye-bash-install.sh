@@ -77,8 +77,8 @@ wrye="$wineprefix/drive_c/wrye-bash"
 get_wrye()
 {
 
-	cd "$wrye"
 	if [ -d "$wrye" ]; then
+		cd "$wrye"
 		read -n 1 '-d ' -sp "Wrye Bash already downloaded, update? (y/n)" wryemenu
 		echo ""
 		if [[ "$wryemenu" == y ]]; then
