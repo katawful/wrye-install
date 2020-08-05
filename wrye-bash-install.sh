@@ -175,8 +175,8 @@ install_wrye()
 Comment=
 Exec=WINEPREFIX="$wineprefix" WINEDEBUG=-all wine C:/Python27/python.exe C:/wrye-bash/Mopy/Wrye\ Bash\ Launcher.pyw
 GenericName=Wrye Bash for modding
-Icon="$wrye/Mopy/bash/images/bash_32.ico
-Name="$wryename"
+Icon=$wrye/Mopy/bash/images/bash_32.ico
+Name=$wryename
 NoDisplay=false
 Path[$e]=
 StartupNotify=true
