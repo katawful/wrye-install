@@ -86,21 +86,18 @@ get_wrye()
 			read -n 1 '-d ' -sp "Would you like to switch branches? (y/n) " branch_switch
 			echo ""
 			if [[ "$branch_switch" == y ]]; then
-				git fetch --all
-				git reset --hard origin/"$curr_branch"
 				if [[ "$curr_branch" == "dev" ]]; then
-					git fetch --all
-					git reset --hard origin/nightly
-					git checkout nightly
-				elif [[ "$curr_branch" == "nightly" ]]; then
-					git fetch --all
 					git reset --hard origin/dev
+					git checkout nightly
+					git pull origin nightly
+				elif [[ "$curr_branch" == "nightly" ]]; then
+					git reset --hard origin/nightly
 					git checkout dev
+					git pull origin dev
 				fi
+				curr_branch=$(git branch --show-current)
 				echo "Branch changed to $curr_branch"
 			else
-				git fetch --all
-				git reset --hard origin/"$curr_branch"
 				git pull origin "$curr_branch"
 				echo ""
 				echo "Wrye Bash updated"
