@@ -19,4 +19,4 @@ Simply run the script in any directory and follow the directions.
 ## Todo
 - [x] Enable use of the nightly/WIP builds over dev builds
 	- This includes being able to switch branches
-- [ ] Clean up code to better handle exceptions (like dead LOOT API link)
+- [ ] Maybe add support for compiled builds
