@@ -170,7 +170,7 @@ install_wrye()
 		cat > "$HOME/.local/share/applications/wrye-bash-installer.desktop" << EOF
 [Desktop Entry]
 Comment=
-Exec=WINEPREFIX="$wineprefix" WINEDEBUG=-all wine C:/Python27/python.exe C:/wrye-bash/Mopy/Wrye\ Bash\ Launcher.pyw
+Exec=WINEPREFIX="$wineprefix" WINEDEBUG=-all wine start C:/Python27/python.exe C:/wrye-bash/Mopy/Wrye\ Bash\ Launcher.pyw
 GenericName=Wrye Bash for modding
 Icon=$wrye/Mopy/bash/images/bash_32.ico
 Name=$wryename
