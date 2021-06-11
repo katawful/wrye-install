@@ -1,3 +1,7 @@
+# DEPRECATED
+With recent updates to Wrye Bash, the Python version no longer works better than the standalone executable.
+This project will not receive any updates.
+
 # Wrye Bash Linux Installer
 
 A script to auto install the Python version of Wrye Bash on Linux.
